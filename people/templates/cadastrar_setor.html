@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<form action="/people/cadastrar_setor/" method="post">
+		{% csrf_token %}
+		<p>Descricao: <input type="text" name="descricao"></p>
+		<p><input type="submit" name="Enviar"></p>
+	</form>
+</body>
+</html>
