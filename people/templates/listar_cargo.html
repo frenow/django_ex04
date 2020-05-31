@@ -5,13 +5,14 @@
 {% load static %}
 {% if lista %}
 	<ul>
-	{% for pessoa in lista %}
+	{% for cargo in lista %}
 		<li>
-			<a href="{% url 'detalhar' pessoa.id %}">{{pessoa}}</a>
-			<a href="{% url 'editar' pessoa.id %}">
+            <a href="{% url 'detalhar_cargo' cargo.id %}">{{cargo.descricao}}</a>
+			<a href="{% url 'editar_cargo' cargo.id %}">
 				<img src="{% static 'editar.png' %}" width="20" height="20">
 			</a>
-			<a href="{% url 'excluir' pessoa.id %}">
+
+			<a href="{% url 'excluir_cargo' cargo.id %}">
 				<img src="{% static 'excluir.png' %}" width="20" height="20">
 			</a>
 		</li>
@@ -19,6 +20,6 @@
 	</ul>
 
 {% else %}
-	<p>Não há pessoas cadastradas</p>
+	<p>Não há cargo cadastrado</p>
 {% endif %}
 <a href="javascript:history.back()">Go Back</a>

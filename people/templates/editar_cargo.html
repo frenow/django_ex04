@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<form action="/people/edit_cargo/" method="POST">
+		{% csrf_token %}
+		<p>Id: <input type="text" name="id" value={{cargo.id}} readonly></p>
+		<p>Descricao: <input type="text" name="descricao" value={{cargo.descricao}}></p>
+		<p>CBO: <input type="text" name="cbo" value={{cargo.cbo}}></p>
+		<p><input type="submit" name="Enviar"></p>
+	</form>
+</body>
+</html>

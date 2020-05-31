@@ -16,6 +16,14 @@ class PessoaDAO(models.Manager):
 		end.save()
 		return p
 
+	def edit(self, id, nome, idade, cpf):
+		p = Pessoa.objects.get(id=id)
+		p.nome = nome
+		p.idade = idade
+		p.cpf = cpf
+		p.save()
+		return p
+
 class Pessoa(models.Model):
 	nome = models.CharField(max_length=200)
 	idade = models.IntegerField(default=0)

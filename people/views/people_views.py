@@ -10,7 +10,7 @@ from ..models import Pessoa, Endereco, Setor, Cargo
 
 @require_http_methods(["GET","POST"])
 def home(request):
-	return HttpResponse("Olá, requisição feita com sucesso!")
+	return render(request, 'index.html')
 
 @csrf_exempt
 @require_http_methods(["POST","GET"])
@@ -71,6 +71,22 @@ def cadastro(request):
 	}
 	return HttpResponse(template.render(context, request))
 
+def editar(request, id_pessoa):
+	pessoa = Pessoa.objects.get(id=id_pessoa)
+	context = {'pessoa':pessoa}
+	return render(request, 'editar.html', context)
+
+@csrf_exempt
+@require_http_methods(["POST","GET"])
+def edit(request):
+	p = Pessoa.objects.edit(
+			request.POST['id'],
+			request.POST['nome'],
+			request.POST['idade'],
+			request.POST['cpf'])
+	return HttpResponse(f"{p} alterado com sucesso")
+
+
 def cadastro_setor(request):
 	template = loader.get_template('cadastrar_setor.html')
 	context = {
@@ -102,17 +118,20 @@ def cadastrar_setor(request):
 	s.save()
 	return HttpResponse(f"{s.descricao} cadastrado com sucesso")
 
+@csrf_exempt
+@require_http_methods(["POST","GET"])
 def listar_setor(request):
-	lista = Setor.objects.all()
-	html = "<ul>"
-	for s in lista:
-		html+=f"<li>{s.descricao} (id={s.id})</li>"
-	html+= "</ul>"
-	return HttpResponse(html)
+	result = Setor.objects.all()
+	template = loader.get_template('listar_setor.html')
+	context = {
+		'lista' : result,
+	}
+	return HttpResponse(template.render(context, request))
 
 def detalhar_setor(request, id_setor):
 	setor = Setor.objects.get(id=id_setor)
-	return HttpResponse(f"Detalhou {setor.descricao} (id={setor.id})")
+	context = {'setor':setor}
+	return render(request, 'detalhe_setor.html', context)
 
 def excluir_setor(request, id_setor):
 	try:
@@ -122,6 +141,19 @@ def excluir_setor(request, id_setor):
 	except ObjectDoesNotExist:
 		return HttpResponse("Setor não encontrado")
 
+def editar_setor(request, id_setor):
+	setor = Setor.objects.get(id=id_setor)
+	context = {'setor':setor}
+	return render(request, 'editar_setor.html', context)
+
+@csrf_exempt
+@require_http_methods(["POST","GET"])
+def edit_setor(request):
+	s = Setor.objects.get(id=request.POST['id'])
+	s.descricao = request.POST['descricao']
+	s.save()
+	return HttpResponse(f"{s.descricao} alterado com sucesso")
+
 def cadastrar_cargo(request):
 	c = Cargo(
 		descricao=request.POST['descricao'], 
@@ -130,16 +162,17 @@ def cadastrar_cargo(request):
 	return HttpResponse(f"{c.descricao} cadastrado com sucesso")
 
 def listar_cargo(request):
-	lista = Cargo.objects.all()
-	html = "<ul>"
-	for c in lista:
-		html+=f"<li>{c.descricao} (id={c.id})</li>"
-	html+= "</ul>"
-	return HttpResponse(html)
+	result = Cargo.objects.all()
+	template = loader.get_template('listar_cargo.html')
+	context = {
+		'lista' : result,
+	}
+	return HttpResponse(template.render(context, request))
 
 def detalhar_cargo(request, id_cargo):
 	cargo = Cargo.objects.get(id=id_cargo)
-	return HttpResponse(f"Detalhou {cargo.descricao} (id={cargo.id})")
+	context = {'cargo':cargo}
+	return render(request, 'detalhe_cargo.html', context)
 
 def excluir_cargo(request, id_cargo):
 	try:
@@ -148,3 +181,17 @@ def excluir_cargo(request, id_cargo):
 		return HttpResponse(f"Excluiu {cargo.descricao} (id={cargo.id})")
 	except ObjectDoesNotExist:
 		return HttpResponse("Cargo não encontrado")
+
+def editar_cargo(request, id_cargo):
+	cargo = Cargo.objects.get(id=id_cargo)
+	context = {'cargo':cargo}
+	return render(request, 'editar_cargo.html', context)
+
+@csrf_exempt
+@require_http_methods(["POST","GET"])
+def edit_cargo(request):
+	c = Cargo.objects.get(id=request.POST['id'])
+	c.descricao = request.POST['descricao']
+	c.cbo = request.POST['cbo']
+	c.save()
+	return HttpResponse(f"{c.descricao} alterado com sucesso")
